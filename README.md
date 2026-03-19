@@ -1,6 +1,8 @@
-# Blockchain-Based Rental Agreement System
+# 🔗 Blockchain-Based Rental Agreement System
 
 A blockchain-powered web application that auto-generates rental agreements and provides cryptographic tamper detection using Ethereum smart contracts.
+
+---
 
 ## Project Overview
 
@@ -11,25 +13,31 @@ Traditional rental agreements are paper-based, easily forged, and lack transpare
 - Storing the hash permanently on Ethereum blockchain
 - Allowing anyone to verify if an agreement has been tampered with
 
+---
+
 ## Research Gap Addressed
 
 While existing works focus on full-fledged decentralized rental ecosystems, there is limited implementation of **lightweight, automated agreement integrity verification** mechanisms suitable for real-world adoption. This project addresses this gap by proposing a blockchain-based auto-generated rental agreement system with tamper-detection capability.
 
+---
+
 ## Tech Stack
 
- Layer - Technology 
+| Layer | Technology |
+|-------|-----------|
+| Frontend | HTML, CSS, JavaScript |
+| Backend | Python Flask |
+| Blockchain | Ethereum (Ganache local) |
+| Smart Contract | Solidity 0.8.21 |
+| Contract Deployment | Truffle |
+| Blockchain Interaction | Web3.py |
+| PDF Generation | ReportLab |
+| Hashing | SHA-256 |
 
-  Frontend - HTML, CSS, JavaScript 
-  Backend - Python Flask 
-  Blockchain - Ethereum (Ganache local)
-  Smart Contract - Solidity 0.8.21 
-  Contract Deployment - Truffle 
-  Blockchain Interaction - Web3.py 
-  PDF Generation - ReportLab
-  Hashing - SHA-256 
+---
 
-##  Project Structure
-
+## Project Structure
+```
 rental-agreement-blockchain/
 │
 ├── contracts/
@@ -56,7 +64,7 @@ rental-agreement-blockchain/
 
 ---
 
-## ⚙️ How to Run
+## How to Run
 
 ### 1. Clone the repository
 ```bash
@@ -97,7 +105,7 @@ http://127.0.0.1:5000
 
 ---
 
-## 🔑 Key Features
+## Key Features
 
 ### Agreement Generation
 - Fill landlord/tenant details in web form
@@ -131,6 +139,7 @@ Hash recomputed and compared
       ↓
 ✅ Authentic  OR  ❌ Tampered
 ```
+
 ---
 
 ## Literature Review Mapping
