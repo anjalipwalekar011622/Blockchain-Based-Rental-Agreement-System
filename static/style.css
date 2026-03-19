@@ -1,0 +1,296 @@
+/* -----------------------------------------------
+   GLOBAL STYLES
+----------------------------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f2f5;
+    color: #333;
+    min-height: 100vh;
+}
+
+/* -----------------------------------------------
+   NAVBAR
+----------------------------------------------- */
+nav {
+    background: #1a1a2e;
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.nav-brand {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.nav-links a {
+    color: #aaa;
+    text-decoration: none;
+    margin-left: 30px;
+    font-size: 15px;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #4fc3f7;
+}
+
+/* -----------------------------------------------
+   CONTAINER
+----------------------------------------------- */
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    font-size: 28px;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+}
+
+.page-header p {
+    color: #666;
+    font-size: 15px;
+}
+
+/* -----------------------------------------------
+   CARDS
+----------------------------------------------- */
+.card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+/* -----------------------------------------------
+   FORM STYLES
+----------------------------------------------- */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #444;
+    font-size: 14px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color 0.2s;
+    outline: none;
+}
+
+input:focus {
+    border-color: #4fc3f7;
+}
+
+small {
+    color: #888;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+/* -----------------------------------------------
+   FILE UPLOAD
+----------------------------------------------- */
+.file-upload-area {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s;
+}
+
+.file-upload-area:hover {
+    border-color: #4fc3f7;
+}
+
+.file-upload-area input[type="file"] {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: #666;
+}
+
+.upload-hint {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.file-name {
+    margin-top: 8px;
+    color: #4fc3f7;
+    font-size: 14px;
+}
+
+/* -----------------------------------------------
+   BUTTONS
+----------------------------------------------- */
+.btn-primary {
+    background: #1a1a2e;
+    color: #fff;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary:hover {
+    background: #16213e;
+}
+
+.btn-primary:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: #fff;
+    color: #1a1a2e;
+    border: 2px solid #1a1a2e;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-secondary:hover {
+    background: #f0f2f5;
+}
+
+.action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+/* -----------------------------------------------
+   RESULT CARDS
+----------------------------------------------- */
+.result-card {
+    border-left: 4px solid #4caf50;
+}
+
+.authentic-card {
+    border-left: 4px solid #4caf50;
+    text-align: center;
+}
+
+.tampered-card {
+    border-left: 4px solid #f44336;
+    text-align: center;
+}
+
+.error-card {
+    border-left: 4px solid #ff9800;
+}
+
+.result-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.result-item {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.result-label {
+    display: block;
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.result-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+.hash-box {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 12px;
+    word-break: break-all;
+    text-align: left;
+}
+
+.hash-box code {
+    font-size: 13px;
+    color: #1a1a2e;
+    display: block;
+    margin-top: 6px;
+}

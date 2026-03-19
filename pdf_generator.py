@@ -2,58 +2,47 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from reportlab.lib.enums import TA_CENTER
 from datetime import datetime
 import os
 
 def generate_agreement(data):
-    """
-    data = {
-        'landlord_name': ...,
-        'tenant_name': ...,
-        'property_address': ...,
-        'rent_amount': ...,
-        'duration_months': ...,
-        'start_date': ...,
-        'deposit_amount': ...
-    }
-    Returns: path to generated PDF
-    """
 
-    # Create filename using tenant name + timestamp
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"agreement_{data['tenant_name'].replace(' ', '_')}_{timestamp}.pdf"
     filepath = os.path.join("static", "agreements", filename)
 
-    # Setup document
+    # ✅ Reduced margins to save space
     doc = SimpleDocTemplate(filepath, pagesize=A4,
-                            rightMargin=inch, leftMargin=inch,
-                            topMargin=inch, bottomMargin=inch)
+                            rightMargin=0.7*inch, leftMargin=0.7*inch,
+                            topMargin=0.6*inch, bottomMargin=0.6*inch)
 
     styles = getSampleStyleSheet()
 
-    # Custom styles
     title_style = ParagraphStyle('Title', parent=styles['Title'],
-                                  fontSize=18, spaceAfter=20, alignment=TA_CENTER)
+                                  fontSize=16, spaceAfter=4, alignment=TA_CENTER)
+
     heading_style = ParagraphStyle('Heading', parent=styles['Normal'],
-                                    fontSize=12, spaceAfter=6, spaceBefore=12,
+                                    fontSize=12, spaceAfter=3, spaceBefore=6,
                                     fontName='Helvetica-Bold')
+
+    # ✅ Reduced leading and spaceAfter
     body_style = ParagraphStyle('Body', parent=styles['Normal'],
-                                 fontSize=11, spaceAfter=6, leading=16)
+                                 fontSize=10, spaceAfter=3, leading=13)
 
     content = []
 
     # Title
     content.append(Paragraph("RENTAL AGREEMENT", title_style))
-    content.append(Paragraph("Blockchain-Verified Document", 
-                              ParagraphStyle('sub', parent=styles['Normal'], 
-                                            fontSize=10, alignment=TA_CENTER, 
+    content.append(Paragraph("Blockchain-Verified Document",
+                              ParagraphStyle('sub', parent=styles['Normal'],
+                                            fontSize=9, alignment=TA_CENTER,
                                             textColor='grey')))
-    content.append(Spacer(1, 20))
+    content.append(Spacer(1, 15))  # ✅ Reduced from 20
 
     # Date
     content.append(Paragraph(f"Date: {data['start_date']}", body_style))
-    content.append(Spacer(1, 10))
+    content.append(Spacer(1, 5))  # ✅ Reduced from 10
 
     # Parties
     content.append(Paragraph("1. PARTIES INVOLVED", heading_style))
@@ -72,7 +61,7 @@ def generate_agreement(data):
     content.append(Paragraph("3. LEASE DURATION", heading_style))
     content.append(Paragraph(
         f"The lease shall commence on <b>{data['start_date']}</b> and "
-        f"shall continue for a period of <b>{data['duration_months']} months</b>.", 
+        f"shall continue for a period of <b>{data['duration_months']} months</b>.",
         body_style))
 
     # Rent
@@ -101,30 +90,41 @@ def generate_agreement(data):
         content.append(Paragraph(f"{i}. {term}", body_style))
 
     # Blockchain notice
-    content.append(Spacer(1, 20))
+    content.append(Spacer(1, 10))  # ✅ Reduced from 20
     content.append(Paragraph(
         "⚠️ This document is blockchain-verified. Any modification after registration "
-        "will be detected during verification.", 
-        ParagraphStyle('notice', parent=styles['Normal'], fontSize=9, 
+        "will be detected during verification.",
+        ParagraphStyle('notice', parent=styles['Normal'], fontSize=8,
                        textColor='red', alignment=TA_CENTER)))
 
     # Signatures
-    content.append(Spacer(1, 40))
+    from reportlab.platypus import Table, TableStyle
+    from reportlab.lib import colors
+
+    content.append(Spacer(1, 16))
     content.append(Paragraph("SIGNATURES", heading_style))
-    content.append(Spacer(1, 10))
-    content.append(Paragraph(
-        f"Landlord: {data['landlord_name']} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        f"Tenant: {data['tenant_name']}", body_style))
-    content.append(Spacer(1, 30))
-    content.append(Paragraph(
-        "_______________________  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        "_______________________", body_style))
-    content.append(Paragraph("(Landlord Signature) &nbsp;&nbsp;&nbsp;&nbsp;"
-                              "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-                              "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-                              "(Tenant Signature)", body_style))
+    content.append(Spacer(1, 20))
 
-    # Build PDF
+    # Table with 2 columns — perfectly aligned
+    sig_data = [
+        [f"Landlord: {data['landlord_name']}", f"Tenant: {data['tenant_name']}"],
+        ["", ""],
+        ["_______________________", "_______________________"],
+        ["(Landlord Signature)", "(Tenant Signature)"],
+    ]
+
+    sig_table = Table(sig_data, colWidths=[3.5*inch, 3.5*inch])
+    sig_table.setStyle(TableStyle([
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ROWBACKGROUND', (0, 0), (-1, -1), colors.white),
+        ('TOPPADDING', (0, 0), (-1, -1), 4),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+    ]))
+
+    content.append(sig_table)
+
     doc.build(content)
-
     return filepath, filename

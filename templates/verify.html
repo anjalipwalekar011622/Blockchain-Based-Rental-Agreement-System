@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Agreement — RentalChain</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-brand">🔗 RentalChain</div>
+        <div class="nav-links">
+            <a href="/">Generate Agreement</a>
+            <a href="/verify" class="active">Verify Agreement</a>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <div class="page-header">
+            <h1>Verify Rental Agreement</h1>
+            <p>Upload an agreement PDF and enter its ID to check if it has been tampered</p>
+        </div>
+
+        <!-- FORM -->
+        <div class="card">
+            <form id="verifyForm">
+
+                <div class="form-group">
+                    <label>Agreement ID</label>
+                    <input type="number" name="agreement_id" 
+                           placeholder="Enter the Agreement ID (e.g. 1)" required>
+                    <small>This is the ID you received when the agreement was generated</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Agreement PDF</label>
+                    <div class="file-upload-area" id="uploadArea">
+                        <input type="file" name="agreement_file" 
+                               id="fileInput" accept=".pdf" required>
+                        <div class="upload-text">
+                            <span>📂 Click to upload or drag & drop</span>
+                            <span class="upload-hint">PDF files only</span>
+                        </div>
+                    </div>
+                    <div id="fileName" class="file-name"></div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="verifyBtn">
+                    🔍 Verify on Blockchain
+                </button>
+
+            </form>
+        </div>
+
+        <!-- AUTHENTIC RESULT -->
+        <div class="card authentic-card" id="authenticCard" style="display:none;">
+            <div class="result-icon">✅</div>
+            <h2>Agreement is AUTHENTIC</h2>
+            <p>This document has NOT been tampered with. The hash matches the blockchain record.</p>
+
+            <div class="result-grid">
+                <div class="result-item">
+                    <span class="result-label">Tenant</span>
+                    <span class="result-value" id="tenantName"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Landlord</span>
+                    <span class="result-value" id="landlordName"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Property</span>
+                    <span class="result-value" id="propertyName"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Monthly Rent</span>
+                    <span class="result-value">₹<span id="rentAmount"></span></span>
+                </div>
+            </div>
+
+            <div class="hash-box">
+                <span class="result-label">Stored Hash (Blockchain)</span>
+                <code id="storedHash"></code>
+            </div>
+            <div class="hash-box">
+                <span class="result-label">Uploaded File Hash</span>
+                <code id="uploadedHash"></code>
+            </div>
+        </div>
+
+        <!-- TAMPERED RESULT -->
+        <div class="card tampered-card" id="tamperedCard" style="display:none;">
+            <div class="result-icon">❌</div>
+            <h2>Agreement has been TAMPERED!</h2>
+            <p>This document does NOT match the blockchain record. It may have been modified.</p>
+
+            <div class="hash-box">
+                <span class="result-label">Stored Hash (Blockchain)</span>
+                <code id="storedHashTampered"></code>
+            </div>
+            <div class="hash-box">
+                <span class="result-label">Uploaded File Hash</span>
+                <code id="uploadedHashTampered"></code>
+            </div>
+        </div>
+
+        <!-- ERROR CARD -->
+        <div class="card error-card" id="errorCard" style="display:none;">
+            <h2>❌ Error</h2>
+            <p id="errorMessage"></p>
+        </div>
+
+    </div>
+
+    <script>
+        // Show filename when file selected
+        document.getElementById('fileInput').addEventListener('change', function() {
+            const fileName = this.files[0] ? this.files[0].name : '';
+            document.getElementById('fileName').textContent = fileName ? '📄 ' + fileName : '';
+        });
+
+        document.getElementById('verifyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('verifyBtn');
+            btn.textContent = '⏳ Verifying...';
+            btn.disabled = true;
+
+            // Hide previous results
+            document.getElementById('authenticCard').style.display = 'none';
+            document.getElementById('tamperedCard').style.display = 'none';
+            document.getElementById('errorCard').style.display = 'none';
+
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch('/verify-agreement', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    if (data.is_authentic) {
+                        // Show authentic result
+                        document.getElementById('tenantName').textContent = data.tenant;
+                        document.getElementById('landlordName').textContent = data.landlord;
+                        document.getElementById('propertyName').textContent = data.property;
+                        document.getElementById('rentAmount').textContent = data.rent;
+                        document.getElementById('storedHash').textContent = data.stored_hash;
+                        document.getElementById('uploadedHash').textContent = data.uploaded_hash;
+                        document.getElementById('authenticCard').style.display = 'block';
+                    } else {
+                        // Show tampered result
+                        document.getElementById('storedHashTampered').textContent = data.stored_hash;
+                        document.getElementById('uploadedHashTampered').textContent = data.uploaded_hash;
+                        document.getElementById('tamperedCard').style.display = 'block';
+                    }
+                } else {
+                    document.getElementById('errorMessage').textContent = data.error;
+                    document.getElementById('errorCard').style.display = 'block';
+                }
+
+            } catch (err) {
+                document.getElementById('errorMessage').textContent = err.message;
+                document.getElementById('errorCard').style.display = 'block';
+            }
+
+            btn.textContent = '🔍 Verify on Blockchain';
+            btn.disabled = false;
+        });
+    </script>
+
+</body>
+</html>
