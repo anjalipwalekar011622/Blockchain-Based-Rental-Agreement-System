@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard — RentalChain</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-brand">🔗 RentalChain</div>
+        <div class="nav-links">
+            <a href="/dashboard" class="active">Dashboard</a>
+            {% if current_user.role == 'landlord' %}
+            <a href="/generate-page">Generate</a>
+            {% endif %}
+            <a href="/verify">Verify</a>
+            <a href="/profile">Profile</a>
+            <a href="/logout" class="btn-nav-logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- WELCOME BANNER -->
+        <div class="welcome-banner">
+            <div>
+                <h1>Welcome, {{ current_user.full_name }}! 👋</h1>
+                <p>
+                    {% if current_user.role == 'landlord' %}
+                        You have {{ agreements|length }} agreement(s) on blockchain
+                    {% else %}
+                        You have {{ agreements|length }} agreement(s) shared with you
+                    {% endif %}
+                </p>
+            </div>
+            <div class="role-badge role-{{ current_user.role }}">
+                {{ '🏠 Landlord' if current_user.role == 'landlord' else '👤 Tenant' }}
+            </div>
+        </div>
+
+        <!-- LANDLORD QUICK ACTIONS -->
+        {% if current_user.role == 'landlord' %}
+        <div class="quick-actions">
+            <a href="/generate-page" class="action-card">
+                <span class="action-icon">📄</span>
+                <span class="action-label">Generate Agreement</span>
+            </a>
+            <a href="/verify" class="action-card">
+                <span class="action-icon">🔍</span>
+                <span class="action-label">Verify Agreement</span>
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- AGREEMENTS TABLE -->
+        <div class="card">
+            <div class="card-header">
+                <h2>
+                    {% if current_user.role == 'landlord' %}
+                        Your Generated Agreements
+                    {% else %}
+                        Your Rental Agreements
+                    {% endif %}
+                </h2>
+            </div>
+
+            {% if agreements %}
+            <div class="table-wrapper">
+                <table class="agreements-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tenant</th>
+                            <th>Landlord</th>
+                            <th>Property</th>
+                            <th>Rent</th>
+                            <th>Date</th>
+                            <th>Blockchain ID</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for agreement in agreements %}
+                        <tr>
+                            <td>#{{ agreement.id }}</td>
+                            <td>{{ agreement.tenant_name }}</td>
+                            <td>{{ agreement.landlord_name }}</td>
+                            <td class="address-cell">{{ agreement.property_address }}</td>
+                            <td>₹{{ agreement.rent_amount }}</td>
+                            <td>{{ agreement.created_at.strftime('%d %b %Y') }}</td>
+                            <td>
+                                <span class="blockchain-id">
+                                    #{{ agreement.blockchain_agreement_id }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="/download/{{ agreement.pdf_filename }}" 
+                                   class="btn-table">
+                                    📥 Download
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📭</div>
+                {% if current_user.role == 'landlord' %}
+                    <p>No agreements yet. <a href="/generate-page">Generate your first one!</a></p>
+                {% else %}
+                    <p>No agreements found. Ask your landlord to add your name.</p>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>

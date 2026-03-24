@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile — RentalChain</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <nav>
+        <div class="nav-brand">🔗 RentalChain</div>
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            {% if current_user.role == 'landlord' %}
+            <a href="/generate-page">Generate</a>
+            {% endif %}
+            <a href="/verify">Verify</a>
+            <a href="/profile" class="active">Profile</a>
+            <a href="/logout" class="btn-nav-logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>My Profile</h1>
+        </div>
+
+        <div class="profile-grid">
+
+            <!-- Profile Card -->
+            <div class="card profile-card">
+                <div class="profile-avatar">
+                    {{ current_user.full_name[0].upper() }}
+                </div>
+                <h2>{{ current_user.full_name }}</h2>
+                <p class="profile-email">{{ current_user.email }}</p>
+                <span class="role-badge role-{{ current_user.role }}">
+                    {{ '🏠 Landlord' if current_user.role == 'landlord' else '👤 Tenant' }}
+                </span>
+            </div>
+
+            <!-- Stats Card -->
+            <div class="card">
+                <h3>Account Details</h3>
+                <div class="profile-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Full Name</span>
+                        <span class="detail-value">{{ current_user.full_name }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">{{ current_user.email }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Role</span>
+                        <span class="detail-value">{{ current_user.role.title() }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Member Since</span>
+                        <span class="detail-value">
+                            {{ current_user.created_at.strftime('%d %B %Y') }}
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Total Agreements</span>
+                        <span class="detail-value">{{ total_agreements }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Password</span>
+                        <span class="detail-value">🔐 Stored as bcrypt hash</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

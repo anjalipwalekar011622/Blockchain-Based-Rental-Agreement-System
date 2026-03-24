@@ -1,3 +1,6 @@
 flask
 reportlab
 web3
+flask-sqlalchemy
+flask-login
+flask-bcrypt

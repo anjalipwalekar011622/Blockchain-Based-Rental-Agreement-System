@@ -29,7 +29,7 @@ with open(ABI_PATH) as f:
     CONTRACT_ABI = contract_json["abi"]
 
 # Paste your contract address from Step 13 here
-CONTRACT_ADDRESS = "0x0D990C541FEaabf5c3c9990289A5C044d926c6BC"
+CONTRACT_ADDRESS = "0xbF5FB984Ec0c73dd1ceE6075369B31A568800b14"
 
 # Create contract instance
 contract = w3.eth.contract(

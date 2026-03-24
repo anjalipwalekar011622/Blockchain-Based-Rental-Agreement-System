@@ -35,9 +35,10 @@
                                placeholder="e.g. Rajesh Kumar" required>
                     </div>
                     <div class="form-group">
-                        <label>Tenant Full Name</label>
-                        <input type="text" name="tenant_name" 
-                               placeholder="e.g. Priya Sharma" required>
+                        <label>Tenant Email Address</label>
+                        <input type="email" name="tenant_email"
+                               placeholder="tenant@example.com" required>
+                        <small>Tenant must be registered on RentalChain</small>
                     </div>
                 </div>
 
@@ -147,8 +148,10 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    // Show result
-                    document.getElementById('agreementId').textContent = data.agreement_id;
+                    // Show tenant name confirmation
+                    if (data.tenant_name) {
+                        document.getElementById('agreementId').textContent = data.agreement_id;
+                    }
                     document.getElementById('blockNumber').textContent = data.block_number;
                     document.getElementById('hashValue').textContent = data.hash;
                     document.getElementById('txHash').textContent = data.transaction_hash;

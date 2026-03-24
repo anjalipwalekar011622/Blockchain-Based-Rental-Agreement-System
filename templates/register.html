@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register — RentalChain</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="auth-body">
+
+    <div class="auth-container">
+        <div class="auth-left">
+            <div class="auth-brand">🔗 RentalChain</div>
+            <h2>Join RentalChain</h2>
+            <p>Create your account and start managing rental agreements on blockchain.</p>
+            <div class="auth-features">
+                <div>🏠 Landlords — Create & manage agreements</div>
+                <div>👤 Tenants — View & download contracts</div>
+                <div>🔐 Secure bcrypt password hashing</div>
+            </div>
+        </div>
+
+        <div class="auth-right">
+            <div class="auth-card">
+                <h2>Create Account</h2>
+                <p class="auth-subtitle">Already have an account? <a href="/login">Login</a></p>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endwith %}
+
+                <form method="POST" action="/register">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="full_name" placeholder="Your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="Create a strong password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Your Role</label>
+                        <select name="role" required>
+                            <option value="" disabled selected>Select your role</option>
+                            <option value="landlord">🏠 Landlord — I own/rent out property</option>
+                            <option value="tenant">👤 Tenant — I rent property</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">Create Account →</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
